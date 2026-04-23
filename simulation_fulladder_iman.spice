@@ -1,0 +1,28 @@
+.include fulladder_iman.spice
+* SCMOS transistor models for simulation
+.model nfet NMOS (LEVEL=1 VTO=0.7 KP=120u)
+.model pfet PMOS (LEVEL=1 VTO=-0.7 KP=60u)
+VDD vdd 0 DC 1.8
+
+* Binary counter style input pattern (tests all 8 cases)
+VA A 0 PULSE(0 1.8 0n 1n 1n 40n 80n)
+VB B 0 PULSE(0 1.8 0n 1n 1n 20n 40n)
+VC C 0 PULSE(0 1.8 0n 1n 1n 10n 20n)
+
+* Instantiate Full Adder
+X1 A B C SUM Carry vdd 0 FA
+
+.tran 0.1n 80n
+
+.control
+run
+set ylimit=0,2
+plot v(A) v(B) v(C) v(SUM) v(Carry)
+plot v(A)
+plot v(B)
+plot v(C)
+plot v(SUM)
+plot v(Carry)
+.endc
+
+.end
